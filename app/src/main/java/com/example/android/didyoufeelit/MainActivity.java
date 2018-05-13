@@ -69,6 +69,10 @@ public class MainActivity extends AppCompatActivity {
 
         @Override
         protected Event doInBackground(String... urls) {
+            if(urls.length < 1 || urls[0] == null){
+                return null;
+            }
+
             Event earthquake = Utils.fetchEarthquakeData(urls[0]);
 
             Log.d(TAG, "doInBackground: AGAIN AND AGAIN");
