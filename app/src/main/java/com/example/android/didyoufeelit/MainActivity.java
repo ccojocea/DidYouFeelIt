@@ -15,8 +15,10 @@
  */
 package com.example.android.didyoufeelit;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.widget.TextView;
 
 /**
@@ -29,16 +31,19 @@ public class MainActivity extends AppCompatActivity {
     private static final String USGS_REQUEST_URL =
             "https://earthquake.usgs.gov/fdsnws/event/1/query?format=geojson&starttime=2016-01-01&endtime=2016-05-02&minfelt=50&minmagnitude=5";
 
+    private static final String TAG = MainActivity.class.getSimpleName();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        new DownloadTask().execute(USGS_REQUEST_URL);
         // Perform the HTTP request for earthquake data and process the response.
-        Event earthquake = Utils.fetchEarthquakeData(USGS_REQUEST_URL);
+        //Event earthquake = Utils.fetchEarthquakeData(USGS_REQUEST_URL);
 
         // Update the information displayed to the user.
-        updateUi(earthquake);
+        //updateUi(earthquake);
     }
 
     /**
@@ -53,5 +58,32 @@ public class MainActivity extends AppCompatActivity {
 
         TextView magnitudeTextView = (TextView) findViewById(R.id.perceived_magnitude);
         magnitudeTextView.setText(earthquake.perceivedStrength);
+    }
+
+    private class DownloadTask extends AsyncTask<String, Void, Event>{
+
+        @Override
+        protected void onPreExecute() {
+            super.onPreExecute();
+        }
+
+        @Override
+        protected Event doInBackground(String... urls) {
+            Event earthquake = Utils.fetchEarthquakeData(urls[0]);
+
+            Log.d(TAG, "doInBackground: AGAIN AND AGAIN");
+
+            return earthquake;
+        }
+
+        @Override
+        protected void onPostExecute(Event evt) {
+            //super.onPostExecute(str);
+            if(evt == null){
+                return;
+            }
+
+            updateUi(evt);
+        }
     }
 }

@@ -138,7 +138,7 @@ public final class Utils {
      * Return an {@link Event} object by parsing out information
      * about the first earthquake from the input earthquakeJSON string.
      */
-    private static Event extractFeatureFromJson(String earthquakeJSON) {
+    public static Event extractFeatureFromJson(String earthquakeJSON) {
         // If the JSON string is empty or null, then return early.
         if (TextUtils.isEmpty(earthquakeJSON)) {
             return null;
